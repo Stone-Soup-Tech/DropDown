@@ -153,6 +153,13 @@ public final class DropDown: UIView {
 	public var width: CGFloat? {
 		didSet { setNeedsUpdateConstraints() }
 	}
+    
+    /**
+    The height of the drop down.
+    */
+    public var height: CGFloat? {
+        didSet { setNeedsUpdateConstraints() }
+    }
 
 	/**
 	arrowIndication.x
@@ -580,6 +587,16 @@ extension DropDown {
 		widthConstraint.constant = layout.width
 		heightConstraint.constant = layout.visibleHeight
 
+        if let height = self.height {
+            if layout.visibleHeight >= height {
+                heightConstraint.constant = self.height ?? layout.visibleHeight
+             } else {
+                heightConstraint.constant = layout.visibleHeight
+             }
+        } else {
+            heightConstraint.constant = layout.visibleHeight
+        }
+        
 		tableView.isScrollEnabled = layout.offscreenHeight > 0
 
 		DispatchQueue.main.async { [weak self] in
@@ -751,10 +768,14 @@ extension DropDown {
 
 		let windowY = window.bounds.minY + DPDConstant.UI.HeightPadding
 
-		if y < windowY {
-			offscreenHeight = abs(y - windowY)
-			y = windowY
-		}
+        if y < windowY {
+            offscreenHeight = abs(y - windowY)
+            if let height = self.height {
+                y = anchorViewMaxY + topOffset.y - height
+            } else {
+                y = windowY
+            }
+        }
 		
 		let width = self.width ?? (anchorView?.plainView.bounds.width ?? fittingWidth()) - topOffset.x
 		
