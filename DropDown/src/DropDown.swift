@@ -738,6 +738,7 @@ extension DropDown {
 	}
 
 	fileprivate func computeLayoutBottomDisplay(window: UIWindow) -> ComputeLayoutTuple {
+		let tableHeight = min(tableHeight, height ?? tableHeight)
 		var offscreenHeight: CGFloat = 0
 		
 		let width = self.width ?? (anchorView?.plainView.bounds.width ?? fittingWidth()) - bottomOffset.x
@@ -764,6 +765,7 @@ extension DropDown {
 	}
 
 	fileprivate func computeLayoutForTopDisplay(window: UIWindow) -> ComputeLayoutTuple {
+		let tableHeight = min(tableHeight, height ?? tableHeight)
 		var offscreenHeight: CGFloat = 0
 
 		let anchorViewX = anchorView?.plainView.windowFrame?.minX ?? 0
@@ -774,14 +776,14 @@ extension DropDown {
 
 		let windowY = window.bounds.minY + DPDConstant.UI.HeightPadding
 
-        if y < windowY {
-            offscreenHeight = abs(y - windowY)
-            if let height = self.height {
-                y = anchorViewMaxY + topOffset.y - height
-            } else {
-                y = windowY
-            }
-        }
+        	if y < windowY {
+            		offscreenHeight = abs(y - windowY)
+            		if let height = self.height {
+                		y = anchorViewMaxY + topOffset.y - height
+            		} else {
+                		y = windowY
+            		}
+        	}
 		
 		let width = self.width ?? (anchorView?.plainView.bounds.width ?? fittingWidth()) - topOffset.x
 		
